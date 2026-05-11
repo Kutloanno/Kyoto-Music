@@ -114,7 +114,7 @@
         payBtn.disabled = true;
 
         // 3. THE FIX: Programmatically "click" the hidden submit button
-        document.getElementById('realSubmitBtn').click();
+        document.getElementById('paymentForm').submit();
       },
       onClose: function(){
         console.log('Payment window closed by user.');
