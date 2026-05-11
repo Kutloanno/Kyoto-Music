@@ -337,7 +337,7 @@ public class EcommerceController {
             String name = (String) item.get("Name");
             String artistEmail = (String) item.get("ArtistEmail");
 
-            receiptItems.append("- 📦 ").append(name).append(" (x").append(qty).append(") : $").append(String.format("%.2f", itemTotal)).append("\n");
+            receiptItems.append("- 📦 ").append(name).append(" (x").append(qty).append(") : R").append(String.format("%.2f", itemTotal)).append("\n");
 
             String lineOrderId = "ORD" + UUID.randomUUID().toString().substring(0, 7).toUpperCase();
             d1Service.executeUpdateWithParams("INSERT INTO PRODUCT_ORDER (OrderID, ProductID, ListenerID, Quantity, TotalAmount, PurchasedAt) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)", List.of(lineOrderId, productId, listenerId, qty, itemTotal));
@@ -357,7 +357,7 @@ public class EcommerceController {
 
             String lineOrderId = "TKT" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
 
-            receiptItems.append("- 🎟️ ").append(name).append(" (x").append(qty).append(") : $").append(String.format("%.2f", itemTotal))
+            receiptItems.append("- 🎟️ ").append(name).append(" (x").append(qty).append(") : R").append(String.format("%.2f", itemTotal))
                     .append("\n     ↳ DOOR CODE: ").append(lineOrderId).append("\n");
 
             d1Service.executeUpdateWithParams("INSERT INTO TICKET_ORDER (OrderID, EventID, ListenerID, Quantity, TotalAmount, TicketCode, PurchasedAt) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)", List.of(lineOrderId, eventId, listenerId, qty, itemTotal, lineOrderId));
