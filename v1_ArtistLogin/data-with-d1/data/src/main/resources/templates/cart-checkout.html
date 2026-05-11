@@ -69,7 +69,9 @@
         <input type="text" name="address">
       </div>
 
-      <button type="button" class="btn-pay" onclick="payWithPaystack()" th:text="'Pay R' + ${finalTotal}">Pay Now</button>
+      <button type="button" id="paystackBtn" class="btn-pay" onclick="payWithPaystack()" th:text="'Pay R' + ${finalTotal}">Pay Now</button>
+
+      <button type="submit" id="realSubmitBtn" style="display: none;"></button>
 
       <div class="secure-badge">
         🔒 Secured by Paystack
@@ -79,13 +81,14 @@
 </div>
 
 <script th:inline="javascript">
-  const paymentForm = document.getElementById('paymentForm');
-
   function payWithPaystack() {
     const email = document.getElementById('email-address').value;
+    const payBtn = document.getElementById('paystackBtn');
+    const paymentForm = document.getElementById('paymentForm');
 
-    if (!email) {
-      alert("Please enter an email address for your receipt.");
+    // Ensure they typed an email before opening the payment window
+    if (!email || !email.includes('@')) {
+      alert("Please enter a valid email address for your receipt.");
       return;
     }
 
@@ -96,19 +99,25 @@
     let handler = PaystackPop.setup({
       key: publicKey,
       email: email,
-      amount: paystackAmount, // Amount is in cents/kobo
-      currency: 'ZAR', // Ensure this is set to South African Rands
+      amount: paystackAmount, // Amount is in cents
+      currency: 'ZAR',
       ref: 'KYT_' + Math.floor((Math.random() * 1000000000) + 1), // Generate a random reference
+
       callback: function(response) {
-        // This triggers ONLY if the payment is successful
-        // Pass the reference to our hidden input
+        // 1. Pass the successful reference to our hidden input
         document.getElementById('paystackReference').value = response.reference;
 
-        // Now actually submit the form to the backend to complete the order!
-        paymentForm.submit();
+        // 2. Give the user visual feedback that it worked
+        payBtn.innerText = "Processing Order... Please wait";
+        payBtn.style.backgroundColor = "#555";
+        payBtn.style.color = "#fff";
+        payBtn.disabled = true;
+
+        // 3. THE FIX: Programmatically "click" the hidden submit button
+        document.getElementById('realSubmitBtn').click();
       },
       onClose: function(){
-        alert('Payment window closed.');
+        console.log('Payment window closed by user.');
       }
     });
 
