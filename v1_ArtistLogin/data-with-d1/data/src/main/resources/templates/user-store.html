@@ -60,7 +60,6 @@
     <div th:if="${success}" class="success-msg" th:text="${success}"></div>
     <div th:if="${error}" class="error-msg" th:text="${error}"></div>
 
-    <!-- UPDATED CATEGORY NAVIGATION -->
     <div class="category-nav">
         <a th:href="@{/store(listenerId=${listenerId})}" th:classappend="${category == null} ? 'active' : ''" class="cat-btn">All</a>
         <a th:href="@{/store(listenerId=${listenerId}, category='Clothing')}" th:classappend="${category == 'Clothing'} ? 'active' : ''" class="cat-btn">Clothing</a>
@@ -86,7 +85,7 @@
                 <div class="p-desc" th:text="${p['Description']}">Description...</div>
 
                 <div class="p-footer">
-                    <div class="p-price" th:text="'$' + ${p['Price']}">$0.00</div>
+                    <div class="p-price" th:text="'R' + ${p['Price']}">R0.00</div>
                     <div style="font-size: 0.8rem; color: #a1a1aa;" th:text="${p['Stock']} + ' left'"></div>
                 </div>
 

@@ -57,9 +57,8 @@
     <div th:if="${success}" class="success-msg" th:text="${success}"></div>
     <div th:if="${error}" class="error-msg" th:text="${error}"></div>
 
-    <!-- Create Event Form -->
     <div class="form-panel">
-        <h3>🎤 Post New Event</h3>
+        <h3>🎉 Post New Event</h3>
         <form th:action="@{/artist/events/add}" method="post" enctype="multipart/form-data">
             <input type="hidden" name="artistId" th:value="${artistId}">
             <div class="form-row">
@@ -82,8 +81,8 @@
                     <input type="time" name="eventTime" required>
                 </div>
                 <div>
-                    <label>Ticket Price (USD)</label>
-                    <input type="number" name="ticketPrice" step="0.01" min="0" placeholder="50.00" required>
+                    <label>Ticket Price (ZAR)</label>
+                    <input type="number" name="ticketPrice" step="0.01" min="0" placeholder="150.00" required>
                 </div>
             </div>
             <div class="form-row">
@@ -100,11 +99,10 @@
                 <label>Event Description</label>
                 <textarea name="description" placeholder="Tell fans what to expect..."></textarea>
             </div>
-            <button type="submit" class="btn btn-primary">📣 Publish Event</button>
+            <button type="submit" class="btn btn-primary">🚀 Publish Event</button>
         </form>
     </div>
 
-    <!-- Upcoming Events -->
     <div class="section-title">My Events</div>
     <div th:if="${#lists.isEmpty(events)}" style="color:#64748b; margin-bottom:40px;">No events posted yet.</div>
 
@@ -121,8 +119,8 @@
             </div>
             <div class="event-meta">
                 <span>📍 <span th:text="${ev['Venue']}">Venue</span></span>
-                <span>🕐 <span th:text="${ev['EventTime']}">Time</span></span>
-                <span>🎟️ $<span th:text="${ev['TicketPrice']}">0</span></span>
+                <span>🕒 <span th:text="${ev['EventTime']}">Time</span></span>
+                <span>🎟️ R<span th:text="${ev['TicketPrice']}">0</span></span>
             </div>
             <div class="ticket-count">
                 Tickets: <span class="ticket-sold" th:text="${ev['TicketsSold']}">0</span> sold
@@ -139,7 +137,6 @@
         </div>
     </div>
 
-    <!-- Ticket Orders -->
     <div class="section-title" style="margin-top:40px;">Ticket Orders</div>
     <div th:if="${#lists.isEmpty(ticketOrders)}" style="color:#64748b;">No ticket orders yet.</div>
     <table class="orders-table" th:if="${!#lists.isEmpty(ticketOrders)}">
@@ -157,7 +154,7 @@
             <td th:text="${o['EventTitle']}">Event</td>
             <td th:text="${o['BuyerName']}">Buyer</td>
             <td th:text="${o['Quantity']}">1</td>
-            <td th:text="'$' + ${o['TotalAmount']}">$0</td>
+            <td th:text="'R' + ${o['TotalAmount']}">R0</td>
             <td th:text="${o['PurchasedAt']}">Date</td>
         </tr>
         </tbody>

@@ -54,7 +54,6 @@
     <div th:if="${success}" class="success-msg" th:text="${success}"></div>
     <div th:if="${error}" class="error-msg" th:text="${error}"></div>
 
-    <!-- Add New Product Form -->
     <div class="form-panel">
         <h3>+ Add New Product</h3>
         <form th:action="@{/artist/store/add}" method="post" enctype="multipart/form-data">
@@ -65,8 +64,8 @@
                     <input type="text" name="name" placeholder="e.g. Limited Edition T-Shirt" required>
                 </div>
                 <div>
-                    <label>Price (USD)</label>
-                    <input type="number" name="price" step="0.01" min="0.01" placeholder="24.99" required>
+                    <label>Price (ZAR)</label>
+                    <input type="number" name="price" step="0.01" min="0.01" placeholder="350.00" required>
                 </div>
             </div>
             <div class="form-row">
@@ -96,7 +95,6 @@
         </form>
     </div>
 
-    <!-- Existing Products -->
     <div class="section-title">My Listings</div>
     <div th:if="${#lists.isEmpty(products)}" style="color:#64748b; margin-bottom:40px;">No products listed yet.</div>
     <div class="card-grid">
@@ -108,7 +106,7 @@
             <div class="info">
                 <span class="badge" th:classappend="${p['Category'] == 'Merch'} ? 'badge-merch' : 'badge-music'" th:text="${p['Category']}">Merch</span>
                 <h4 th:text="${p['Name']}">Product Name</h4>
-                <div class="price" th:text="'$' + ${p['Price']}">$0.00</div>
+                <div class="price" th:text="'R' + ${p['Price']}">R0.00</div>
                 <div class="stock" th:text="${p['Stock']} + ' in stock'">0 in stock</div>
                 <div class="action-row">
                     <form th:action="@{/artist/store/delete}" method="post">

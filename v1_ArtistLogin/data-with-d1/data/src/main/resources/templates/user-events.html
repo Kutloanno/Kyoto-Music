@@ -103,7 +103,7 @@
                 <p style="color: #a1a1aa; font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px;" th:text="${ev['Description']}"></p>
 
                 <div class="ticket-info">
-                    <div class="price" th:text="'$' + ${ev['TicketPrice']}">$0.00</div>
+                    <div class="price" th:text="'R' + ${ev['TicketPrice']}">R0.00</div>
                     <div th:if="${(ev['TotalTickets'] - ev['TicketsSold']) > 10}" class="availability avail-good">Tickets Available</div>
                     <div th:if="${(ev['TotalTickets'] - ev['TicketsSold']) > 0 and (ev['TotalTickets'] - ev['TicketsSold']) <= 10}" class="availability avail-low">Selling Fast</div>
                     <div th:if="${(ev['TotalTickets'] - ev['TicketsSold']) <= 0}" class="availability avail-out">Sold Out</div>
@@ -125,7 +125,6 @@
         </div>
     </div>
 
-    <!-- My Tickets Section -->
     <div class="section-title">My Tickets</div>
 
     <div th:if="${#lists.isEmpty(myTickets)}" style="color:#a1a1aa; background: #181818; padding: 30px; border-radius: 14px; text-align: center;">
@@ -140,7 +139,6 @@
                 <p style="margin-top: 5px; color: #1DB954; font-weight: bold;" th:text="${t['Quantity']} + ' Ticket(s)'">1 Ticket(s)</p>
             </div>
 
-            <!-- UPDATED T-RIGHT SECTION WITH CANCEL BUTTON -->
             <div class="t-right" style="display: flex; flex-direction: column; align-items: flex-end; gap: 10px;">
                 <div style="text-align: right;">
                     <div style="font-size: 0.8rem; color: #a1a1aa; margin-bottom: 4px;">DOOR CODE</div>
