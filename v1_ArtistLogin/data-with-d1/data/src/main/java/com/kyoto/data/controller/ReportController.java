@@ -25,126 +25,163 @@ public class ReportController {
     @Autowired
     private D1Service d1Service;
 
-    // Helper method to execute queries depending on the chosen filter type
-    private List<Map<String, Object>> fetchReportData(String filterType) {
+    private List<Map<String, Object>> fetchReportData(String filterType, String customTable, String customMetric, String customOrder) {
         String sql;
-        if ("topArtists".equalsIgnoreCase(filterType)) {
-            // Ranks artists by who uploaded the most songs, listing total tracks and cumulative streams
-            sql = "SELECT a.ArtistID, a.Name, a.Gender, COUNT(s.SongID) as TotalSongs, COALESCE(SUM(s.PlayCount), 0) as CumulativeStreams " +
-                    "FROM ARTIST a " +
-                    "LEFT JOIN SONG s ON a.ArtistID = s.ArtistID " +
-                    "GROUP BY a.ArtistID, a.Name, a.Gender " +
-                    "ORDER BY TotalSongs DESC";
-            return d1Service.getResults(d1Service.executeQuery(sql));
-        } else if ("premiumListeners".equalsIgnoreCase(filterType)) {
-            // Filters listeners to show premium accounts alongside their chosen plan descriptions
-            sql = "SELECT l.ListenerID, l.Name, l.Gender, p.PlanName, p.Price " +
-                    "FROM LISTENER l " +
-                    "LEFT JOIN PLAN p ON l.PlanID = p.PlanID " +
-                    "WHERE l.isPremium = 1";
-            return d1Service.getResults(d1Service.executeQuery(sql));
-        } else {
-            // Default: General Platform Song Catalog Insights
-            sql = "SELECT s.SongID, s.Title, a.Name as ArtistName, s.PlayCount, s.DownloadCount " +
-                    "FROM SONG s " +
-                    "LEFT JOIN ARTIST a ON s.ArtistID = a.ArtistID " +
-                    "ORDER BY s.PlayCount DESC";
-            return d1Service.getResults(d1Service.executeQuery(sql));
+
+        switch (filterType != null ? filterType : "topArtists") {
+            case "topArtists":
+                sql = "SELECT a.ArtistID, a.Name, a.Gender, COUNT(s.SongID) as TotalSongs, COALESCE(SUM(s.PlayCount), 0) as CumulativeStreams " +
+                        "FROM ARTIST a LEFT JOIN SONG s ON a.ArtistID = s.ArtistID " +
+                        "GROUP BY a.ArtistID, a.Name, a.Gender ORDER BY TotalSongs DESC";
+                break;
+            case "leastSongs":
+                sql = "SELECT a.ArtistID, a.Name, a.Gender, COUNT(s.SongID) as TotalSongs " +
+                        "FROM ARTIST a LEFT JOIN SONG s ON a.ArtistID = s.ArtistID " +
+                        "GROUP BY a.ArtistID, a.Name, a.Gender ORDER BY TotalSongs ASC";
+                break;
+            case "maleArtists":
+                sql = "SELECT ArtistID, Name, DateAccountCreated, Email FROM ARTIST WHERE Gender = 'M' ORDER BY Name ASC";
+                break;
+            case "femaleArtists":
+                sql = "SELECT ArtistID, Name, DateAccountCreated, Email FROM ARTIST WHERE Gender = 'F' ORDER BY Name ASC";
+                break;
+            case "mostStreams":
+                sql = "SELECT s.SongID, s.Title, a.Name as Artist, g.GenreName, s.PlayCount " +
+                        "FROM SONG s LEFT JOIN ARTIST a ON s.ArtistID = a.ArtistID LEFT JOIN GENRE g ON s.GenreID = g.GenreID " +
+                        "ORDER BY s.PlayCount DESC";
+                break;
+            case "leastStreams":
+                sql = "SELECT s.SongID, s.Title, a.Name as Artist, s.PlayCount FROM SONG s " +
+                        "LEFT JOIN ARTIST a ON s.ArtistID = a.ArtistID ORDER BY s.PlayCount ASC";
+                break;
+            case "mostPopularEvent":
+                sql = "SELECT e.EventID, e.Title, a.Name as Headliner, e.Venue, e.TicketsSold, e.TotalTickets " +
+                        "FROM EVENT e LEFT JOIN ARTIST a ON e.ArtistID = a.ArtistID ORDER BY e.TicketsSold DESC";
+                break;
+            case "mostEventRevenue":
+                sql = "SELECT Title, Venue, EventDate, TicketPrice, TicketsSold, (TicketsSold * TicketPrice) as GrossRevenue FROM EVENT ORDER BY GrossRevenue DESC";
+                break;
+            case "highestTicketPrice":
+                sql = "SELECT Title, Venue, EventDate, TicketPrice, TotalTickets FROM EVENT ORDER BY TicketPrice DESC";
+                break;
+            case "topSellingMerch":
+                sql = "SELECT p.ProductID, p.Name, a.Name as Artist, p.Price, SUM(o.Quantity) as UnitsSold, SUM(o.TotalAmount) as TotalRevenue " +
+                        "FROM PRODUCT_ORDER o LEFT JOIN PRODUCT p ON o.ProductID = p.ProductID LEFT JOIN ARTIST a ON p.ArtistID = a.ArtistID " +
+                        "GROUP BY p.ProductID, p.Name, a.Name, p.Price ORDER BY UnitsSold DESC";
+                break;
+            case "lowStockAlert":
+                sql = "SELECT p.ProductID, p.Name, a.Name as Artist, p.Category, p.Stock FROM PRODUCT p " +
+                        "LEFT JOIN ARTIST a ON p.ArtistID = a.ArtistID WHERE p.Stock < 10 ORDER BY p.Stock ASC";
+                break;
+            case "popularGenres":
+                sql = "SELECT g.GenreName, COUNT(s.SongID) as TotalTracks, COALESCE(SUM(s.PlayCount), 0) as AggregatePlays " +
+                        "FROM GENRE g LEFT JOIN SONG s ON g.GenreID = s.GenreID GROUP BY g.GenreID, g.GenreName ORDER BY AggregatePlays DESC";
+                break;
+
+            case "customBuilder":
+                // Sanitize and guard manual SQL building vectors cleanly
+                String target = "ARTIST".equalsIgnoreCase(customTable) ? "ARTIST" :
+                        "SONG".equalsIgnoreCase(customTable) ? "SONG" :
+                                "EVENT".equalsIgnoreCase(customTable) ? "EVENT" : "PRODUCT";
+
+                String metric = "PlayCount".equalsIgnoreCase(customMetric) ? "PlayCount" :
+                        "DownloadCount".equalsIgnoreCase(customMetric) ? "DownloadCount" :
+                                "TicketsSold".equalsIgnoreCase(customMetric) ? "TicketsSold" :
+                                        "Stock".equalsIgnoreCase(customMetric) ? "Stock" : "Price";
+
+                String ordering = "ASC".equalsIgnoreCase(customOrder) ? "ASC" : "DESC";
+
+                if ("ARTIST".equals(target)) {
+                    sql = "SELECT ArtistID, Name, Gender, DateAccountCreated FROM ARTIST ORDER BY Name " + ordering;
+                } else if ("SONG".equals(target)) {
+                    sql = "SELECT SongID, Title, PlayCount, DownloadCount, Duration FROM SONG ORDER BY " + metric + " " + ordering;
+                } else if ("EVENT".equals(target)) {
+                    sql = "SELECT EventID, Title, Venue, EventDate, TicketsSold, TicketPrice FROM EVENT ORDER BY " + metric + " " + ordering;
+                } else {
+                    sql = "SELECT ProductID, Name, Category, Price, Stock FROM PRODUCT ORDER BY " + metric + " " + ordering;
+                }
+                break;
+
+            default:
+                sql = "SELECT ArtistID, Name FROM ARTIST";
         }
+        return d1Service.getResults(d1Service.executeQuery(sql));
     }
 
     @GetMapping("/admin/reports")
     public String reportPage(@RequestParam String adminId,
                              @RequestParam(defaultValue = "topArtists") String filterType,
+                             @RequestParam(required = false, defaultValue = "SONG") String customTable,
+                             @RequestParam(required = false, defaultValue = "PlayCount") String customMetric,
+                             @RequestParam(required = false, defaultValue = "DESC") String customOrder,
                              Model model) {
         var admin = d1Service.getResults(d1Service.executeQueryWithParams("SELECT Name FROM ADMIN WHERE AdminID = ?", List.of(adminId)));
-        List<Map<String, Object>> reportData = fetchReportData(filterType);
+        List<Map<String, Object>> reportData = fetchReportData(filterType, customTable, customMetric, customOrder);
 
         model.addAttribute("adminName", admin.get(0).get("Name"));
         model.addAttribute("adminId", adminId);
         model.addAttribute("filterType", filterType);
+        model.addAttribute("customTable", customTable);
+        model.addAttribute("customMetric", customMetric);
+        model.addAttribute("customOrder", customOrder);
         model.addAttribute("reportData", reportData);
 
-        return "adminReports"; // Renders adminReports.html
+        return "adminReports";
     }
 
     @GetMapping("/admin/reports/download")
-    public ResponseEntity<byte[]> downloadReport(@RequestParam String filterType, @RequestParam String format) throws IOException {
-        List<Map<String, Object>> data = fetchReportData(filterType);
+    public ResponseEntity<byte[]> downloadReport(@RequestParam String filterType,
+                                                 @RequestParam String format,
+                                                 @RequestParam(required = false) String customTable,
+                                                 @RequestParam(required = false) String customMetric,
+                                                 @RequestParam(required = false) String customOrder) throws IOException {
+        List<Map<String, Object>> data = fetchReportData(filterType, customTable, customMetric, customOrder);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         String filename = "Kyoto_" + filterType + "_Report";
 
         if ("pdf".equalsIgnoreCase(format)) {
-            // Explicitly use Lowagie's Document class to avoid conflicts with Apache POI
             com.lowagie.text.Document document = new com.lowagie.text.Document(com.lowagie.text.PageSize.A4);
             com.lowagie.text.pdf.PdfWriter.getInstance(document, out);
             document.open();
-
             document.add(new Paragraph("Kyoto Music Platform - Management Report", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18)));
-            document.add(new Paragraph("Filter Applied: " + filterType));
-            document.add(new Paragraph(" ")); // Spacer
+            document.add(new Paragraph("Filter Scope: " + filterType));
+            document.add(new Paragraph(" "));
 
             if (!data.isEmpty()) {
-                var firstRow = data.get(0);
-                PdfPTable table = new PdfPTable(firstRow.size());
+                PdfPTable table = new PdfPTable(data.get(0).size());
                 table.setWidthPercentage(100);
-
-                // Headers
-                for (String key : firstRow.keySet()) {
-                    table.addCell(key);
-                }
-                // Data rows
+                for (String key : data.get(0).keySet()) table.addCell(key);
                 for (Map<String, Object> row : data) {
-                    for (Object val : row.values()) {
-                        table.addCell(val != null ? val.toString() : "N/A");
-                    }
+                    for (Object val : row.values()) table.addCell(val != null ? val.toString() : "N/A");
                 }
                 document.add(table);
             }
             document.close();
-
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename + ".pdf")
-                    .contentType(MediaType.APPLICATION_PDF)
-                    .body(out.toByteArray());
-
+            return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename + ".pdf")
+                    .contentType(MediaType.APPLICATION_PDF).body(out.toByteArray());
         } else {
-            // DOCX generation
             XWPFDocument document = new XWPFDocument();
             XWPFParagraph title = document.createParagraph();
             XWPFRun run = title.createRun();
-            run.setText("Kyoto Music Platform - Management Report");
+            run.setText("Kyoto Music Platform - Management Report: " + filterType);
             run.setBold(true);
-            run.setFontSize(16);
 
             if (!data.isEmpty()) {
                 var firstRow = data.get(0);
                 XWPFTable table = document.createTable(data.size() + 1, firstRow.size());
-
-                // Set Header values
                 int colIndex = 0;
-                XWPFTableRow headerRow = table.getRow(0);
-                for (String key : firstRow.keySet()) {
-                    headerRow.getCell(colIndex++).setText(key);
-                }
-
-                // Set Data values
+                for (String key : firstRow.keySet()) table.getRow(0).getCell(colIndex++).setText(key);
                 int rowIndex = 1;
                 for (Map<String, Object> row : data) {
                     XWPFTableRow tableRow = table.getRow(rowIndex++);
                     int cIndex = 0;
-                    for (Object val : row.values()) {
-                        tableRow.getCell(cIndex++).setText(val != null ? val.toString() : "N/A");
-                    }
+                    for (Object val : row.values()) tableRow.getCell(cIndex++).setText(val != null ? val.toString() : "N/A");
                 }
             }
             document.write(out);
             document.close();
-
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename + ".docx")
-                    .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.wordprocessingml.document"))
-                    .body(out.toByteArray());
+            return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename + ".docx")
+                    .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.wordprocessingml.document")).body(out.toByteArray());
         }
     }
 }

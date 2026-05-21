@@ -3,29 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kyoto Admin - Report Analytics</title>
+    <title>Kyoto Admin - Report Analytics Engine</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #f1f5f9; margin: 0; }
         .sidebar { width: 250px; background: #1e293b; color: white; height: 100vh; position: fixed; padding: 20px; }
         .sidebar p { margin: 10px 0; font-size: 0.95rem; }
         .sidebar a { color: #94a3b8; text-decoration: none; font-size: 0.9rem; display: block; margin-top: 15px; }
-
         .main { margin-left: 280px; padding: 30px; }
-
-        .form-box { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px; }
-        select { padding: 8px; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 0.95rem; }
-
-        .btn-submit { background: #1e293b; color: white; padding: 8px 15px; border-radius: 4px; border: none; cursor: pointer; font-weight: 500; }
-        .btn-download { text-decoration: none; display: inline-block; padding: 8px 15px; border-radius: 4px; font-weight: bold; font-size: 0.9rem; margin-left: 10px; color: white; transition: opacity 0.2s; }
-        .btn-download:hover, .btn-submit:hover { opacity: 0.9; }
-
+        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px; }
+        .form-box { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        select { padding: 8px; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 0.95rem; width: 100%; box-sizing: border-box; margin-bottom: 10px; }
+        label { font-size: 0.85rem; font-weight: bold; color: #475569; display: block; margin-bottom: 4px; }
+        .btn-submit { background: #1e293b; color: white; padding: 10px 15px; border-radius: 4px; border: none; cursor: pointer; font-weight: 500; width: 100%; }
+        .btn-download { text-decoration: none; display: inline-block; padding: 10px 20px; border-radius: 4px; font-weight: bold; font-size: 0.9rem; color: white; text-align: center; }
         .btn-pdf { background: #ef4444; }
         .btn-docx { background: #0ea5e9; }
-
         table { width: 100%; background: white; border-collapse: collapse; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-top: 20px; }
-        th { background: #f8fafc; padding: 15px; text-align: left; color: #64748b; text-transform: capitalize; border-bottom: 2px solid #e2e8f0; }
-        td { padding: 15px; border-top: 1px solid #e2e8f0; color: #334155; }
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        th { background: #f8fafc; padding: 12px; text-align: left; color: #64748b; text-transform: uppercase; font-size: 0.8rem; border-bottom: 2px solid #e2e8f0; }
+        td { padding: 12px; border-top: 1px solid #e2e8f0; color: #334155; font-size: 0.9rem; }
+        .export-actions { background: white; padding: 15px; border-radius: 8px; display: flex; gap: 15px; justify-content: flex-end; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px; }
     </style>
 </head>
 <body>
@@ -39,28 +35,77 @@
 </div>
 
 <div class="main">
-    <div class="section-header">
-        <h2>System Reporting Engine</h2>
+    <h2>System Reporting Engine</h2>
+
+    <div class="grid-container">
+        <div class="form-box">
+            <h3>Express System Presets</h3>
+            <form th:action="@{/admin/reports}" method="get">
+                <input type="hidden" name="adminId" th:value="${adminId}">
+                <label>Select Predefined Matrix</label>
+                <select name="filterType">
+                    <option value="topArtists" th:selected="${filterType == 'topArtists'}">Artists: Highest Upload Volume</option>
+                    <option value="leastSongs" th:selected="${filterType == 'leastSongs'}">Artists: Smallest Catalog Size</option>
+                    <option value="maleArtists" th:selected="${filterType == 'maleArtists'}">Demographics: Male Artists Only</option>
+                    <option value="femaleArtists" th:selected="${filterType == 'femaleArtists'}">Demographics: Female Artists Only</option>
+                    <option value="mostStreams" th:selected="${filterType == 'mostStreams'}">Streams: Most Played Tracks</option>
+                    <option value="leastStreams" th:selected="${filterType == 'leastStreams'}">Streams: Cold Catalog Items</option>
+                    <option value="mostPopularEvent" th:selected="${filterType == 'mostPopularEvent'}">Events: Top Attendance & Ticket Volume</option>
+                    <option value="mostEventRevenue" th:selected="${filterType == 'mostEventRevenue'}">Events: Gross Revenue Yield</option>
+                    <option value="highestTicketPrice" th:selected="${filterType == 'highestTicketPrice'}">Events: Premium Pricing Models</option>
+                    <option value="topSellingMerch" th:selected="${filterType == 'topSellingMerch'}">Sales: Best Performing Merch</option>
+                    <option value="lowStockAlert" th:selected="${filterType == 'lowStockAlert'}">Inventory: Low Stock Alerts (&lt; 10 units)</option>
+                    <option value="popularGenres" th:selected="${filterType == 'popularGenres'}">Genres: Aggregate Stream Consumption</option>
+                </select>
+                <button type="submit" class="btn-submit">Run Preset Filter</button>
+            </form>
+        </div>
+
+        <div class="form-box" style="border-left: 4px solid #0ea5e9;">
+            <h3>Interactive Custom Builder</h3>
+            <form th:action="@{/admin/reports}" method="get">
+                <input type="hidden" name="adminId" th:value="${adminId}">
+                <input type="hidden" name="filterType" value="customBuilder">
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div>
+                        <label>Target Table</label>
+                        <select name="customTable">
+                            <option value="ARTIST" th:selected="${customTable == 'ARTIST'}">Artists Module</option>
+                            <option value="SONG" th:selected="${customTable == 'SONG'}">Songs Catalog</option>
+                            <option value="EVENT" th:selected="${customTable == 'EVENT'}">Events Engine</option>
+                            <option value="PRODUCT" th:selected="${customTable == 'PRODUCT'}">Inventory items</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Evaluation Metric</label>
+                        <select name="customMetric">
+                            <option value="PlayCount" th:selected="${customMetric == 'PlayCount'}">Streams (Songs)</option>
+                            <option value="DownloadCount" th:selected="${customMetric == 'DownloadCount'}">Downloads (Songs)</option>
+                            <option value="TicketsSold" th:selected="${customMetric == 'TicketsSold'}">Sales (Events)</option>
+                            <option value="Price" th:selected="${customMetric == 'Price'}">Unit Pricing (Merch)</option>
+                            <option value="Stock" th:selected="${customMetric == 'Stock'}">Inventory Depth (Merch)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <label>Sort Direction</label>
+                <select name="customOrder">
+                    <option value="DESC" th:selected="${customOrder == 'DESC'}">Descending (Highest / Greatest First)</option>
+                    <option value="ASC" th:selected="${customOrder == 'ASC'}">Ascending (Lowest / Minimal First)</option>
+                </select>
+
+                <button type="submit" class="btn-submit" style="background: #0ea5e9;">Compile Custom Query</button>
+            </form>
+        </div>
     </div>
 
-    <div class="form-box">
-        <h3>Filter & Export Criteria</h3>
-        <form th:action="@{/admin/reports}" method="get" style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
-            <input type="hidden" name="adminId" th:value="${adminId}">
-
-            <select name="filterType">
-                <option value="topArtists" th:selected="${filterType == 'topArtists'}">Artists by Upload Volume</option>
-                <option value="premiumListeners" th:selected="${filterType == 'premiumListeners'}">Active Premium Subscriptions</option>
-                <option value="songCatalog" th:selected="${filterType == 'songCatalog'}">Songs Catalog by Stream Ranking</option>
-            </select>
-
-            <button type="submit" class="btn-submit">Generate Preview</button>
-
-            <div style="margin-left: auto;">
-                <a th:href="@{/admin/reports/download(filterType=${filterType}, format='pdf')}" class="btn-download btn-pdf">Download PDF</a>
-                <a th:href="@{/admin/reports/download(filterType=${filterType}, format='docx')}" class="btn-download btn-docx">Download Word</a>
-            </div>
-        </form>
+    <div class="export-actions">
+        <span style="margin-right: auto; font-weight: 500; color: #475569;">
+            Active Configuration View: <strong style="color: #1e293b;" th:text="${filterType}">Preset</strong>
+        </span>
+        <a th:href="@{/admin/reports/download(filterType=${filterType}, format='pdf', customTable=${customTable}, customMetric=${customMetric}, customOrder=${customOrder})}" class="btn-download btn-pdf">Export Current as PDF</a>
+        <a th:href="@{/admin/reports/download(filterType=${filterType}, format='docx', customTable=${customTable}, customMetric=${customMetric}, customOrder=${customOrder})}" class="btn-download btn-docx">Export Current as Word</a>
     </div>
 
     <div th:if="${not #lists.isEmpty(reportData)}">
@@ -79,7 +124,7 @@
     </div>
 
     <div th:if="${#lists.isEmpty(reportData)}" class="form-box" style="text-align: center; color: #64748b; padding: 40px 20px;">
-        No active data records matched the selected query parameters.
+        No records found matching that criteria grid. Check table definitions or target variables.
     </div>
 </div>
 
