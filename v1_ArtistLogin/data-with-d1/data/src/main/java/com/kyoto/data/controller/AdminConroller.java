@@ -3,6 +3,7 @@ package com.kyoto.data.controller;
 import com.kyoto.data.model.D1Response;
 import com.kyoto.data.service.D1Service;
 import com.kyoto.data.service.R2Service;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,16 +22,20 @@ public class AdminConroller {
     @Autowired
     private R2Service musicService; // Inject R2 Service for file cleanup
 
-
     @GetMapping("/adminLogin")
-    public String adminLoginPage() {
+    public String adminLoginPage(@RequestParam(required = false) String error, Model model) {
+        if (error != null) {
+            model.addAttribute("error", "Session expired or invalid credentials.");
+        }
         return "adminLogin";
     }
 
     @PostMapping("/adminLogin")
     public String login(@RequestParam String username,
                         @RequestParam String password,
+                        HttpSession session,
                         Model model) {
+
         // Query matches the ADMIN table schema
         String sql = "SELECT * FROM ADMIN WHERE Name = ? AND Password = ?";
         D1Response response = d1Service.executeQueryWithParams(sql, List.of(username, password));
@@ -38,7 +43,10 @@ public class AdminConroller {
 
         if (!results.isEmpty()) {
             String adminId = results.get(0).get("AdminID").toString();
-            return "redirect:/adminDashboard?adminId=" + adminId;
+
+            // SECURITY FIX: Store in secure server session, not the URL
+            session.setAttribute("adminId", adminId);
+            return "redirect:/adminDashboard";
         } else {
             model.addAttribute("error", "Invalid admin credentials");
             return "adminLogin";
@@ -46,7 +54,10 @@ public class AdminConroller {
     }
 
     @GetMapping("/adminDashboard")
-    public String adminDashboard(@RequestParam String adminId, Model model) {
+    public String adminDashboard(HttpSession session, Model model) {
+        // SECURITY FIX: Pull from session
+        String adminId = (String) session.getAttribute("adminId");
+
         // 1. Fetch Admin Info
         var admin = d1Service.getResults(d1Service.executeQueryWithParams("SELECT Name FROM ADMIN WHERE AdminID = ?", List.of(adminId)));
 
@@ -63,24 +74,22 @@ public class AdminConroller {
         model.addAttribute("songs", songs);
         model.addAttribute("artists", artists);
         model.addAttribute("listeners", listeners);
-        model.addAttribute("adminId", adminId);
 
         return "adminDashboard";
     }
 
-
-
     @PostMapping("/admin/addAdmin")
-    public String addAdmin(@RequestParam String newAdminId, @RequestParam String name,
-                           @RequestParam String password, @RequestParam String adminId) {
+    public String addAdmin(@RequestParam String newAdminId,
+                           @RequestParam String name,
+                           @RequestParam String password) {
+
         d1Service.executeUpdateWithParams("INSERT INTO ADMIN (AdminID, Name, Password) VALUES (?, ?, ?)",
                 List.of(newAdminId, name, password));
-        return "redirect:/adminDashboard?adminId=" + adminId;
+        return "redirect:/adminDashboard";
     }
 
-
     @PostMapping("/admin/deleteSong")
-    public String deleteSong(@RequestParam String songId, @RequestParam String adminId) {
+    public String deleteSong(@RequestParam String songId) {
         // Get file keys from DB before deleting record
         String sql = "SELECT AudioFileURL, CoverArtURL FROM SONG WHERE SongID = ?";
         var results = d1Service.getResults(d1Service.executeQueryWithParams(sql, List.of(songId)));
@@ -97,13 +106,11 @@ public class AdminConroller {
         d1Service.executeUpdateWithParams("DELETE FROM ALBUM_SONG WHERE SongID = ?", List.of(songId));
         d1Service.executeUpdateWithParams("DELETE FROM SONG WHERE SongID = ?", List.of(songId));
 
-        return "redirect:/adminDashboard?adminId=" + adminId;
+        return "redirect:/adminDashboard";
     }
 
-
     @PostMapping("/admin/deleteArtist")
-    public String deleteArtist(@RequestParam String artistId, @RequestParam String adminId) {
-
+    public String deleteArtist(@RequestParam String artistId) {
         var songs = d1Service.getResults(d1Service.executeQueryWithParams("SELECT SongID, AudioFileURL, CoverArtURL FROM SONG WHERE ArtistID = ?", List.of(artistId)));
         for (Map<String, Object> song : songs) {
             musicService.deleteSong((String) song.get("AudioFileURL"));
@@ -116,44 +123,56 @@ public class AdminConroller {
         d1Service.executeUpdateWithParams("DELETE FROM SONG WHERE ArtistID = ?", List.of(artistId));
         d1Service.executeUpdateWithParams("DELETE FROM ARTIST WHERE ArtistID = ?", List.of(artistId));
 
-        return "redirect:/adminDashboard?adminId=" + adminId;
+        return "redirect:/adminDashboard";
     }
 
-
     @PostMapping("/admin/deleteListener")
-    public String deleteListener(@RequestParam String listenerId, @RequestParam String adminId) {
+    public String deleteListener(@RequestParam String listenerId) {
         // Delete playlist links first
         d1Service.executeUpdateWithParams("DELETE FROM PLAYLIST_SONG WHERE PlaylistID IN (SELECT PlaylistID FROM PLAYLIST WHERE ListenerID = ?)", List.of(listenerId));
         d1Service.executeUpdateWithParams("DELETE FROM PLAYLIST WHERE ListenerID = ?", List.of(listenerId));
         d1Service.executeUpdateWithParams("DELETE FROM LISTENER WHERE ListenerID = ?", List.of(listenerId));
 
-        return "redirect:/adminDashboard?adminId=" + adminId;
+        return "redirect:/adminDashboard";
     }
 
     @PostMapping("/admin/createListener")
-    public String createListener(@RequestParam String listenerId,
-                                 @RequestParam String name,
+    public String createListener(@RequestParam String name,
+                                 @RequestParam String username,
                                  @RequestParam String password,
                                  @RequestParam String gender,
-                                 @RequestParam String adminId) {
+                                 HttpSession session) {
 
+        String adminId = (String) session.getAttribute("adminId");
+
+        // Enforces mapping the required username standard directly to the ListenerID column
         String sql = "INSERT INTO LISTENER (ListenerID, Name, Password, isPremium, AdminID, Gender) VALUES (?, ?, ?, ?, ?, ?)";
-        d1Service.executeUpdateWithParams(sql, List.of(listenerId, name, password, 0, adminId, gender));
+        d1Service.executeUpdateWithParams(sql, List.of(username, name, password, 0, adminId, gender));
 
-        return "redirect:/adminDashboard?adminId=" + adminId;
+        return "redirect:/adminDashboard";
     }
-
 
     @PostMapping("/admin/createArtist")
     public String createArtist(@RequestParam String name,
-                               @RequestParam String password,
                                @RequestParam String gender,
-                               @RequestParam String adminId) {
+                               @RequestParam String password,
+                               @RequestParam String confirmPassword) {
+
+        if (!password.equals(confirmPassword)) {
+            return "redirect:/adminDashboard?error=PasswordMismatch";
+        }
 
         String artistId = "ART" + java.util.UUID.randomUUID().toString().substring(0, 7).toUpperCase();
         String sql = "INSERT INTO ARTIST (ArtistID, Name, Gender, Password) VALUES (?, ?, ?, ?)";
         d1Service.executeUpdateWithParams(sql, List.of(artistId, name, gender, password));
 
-        return "redirect:/adminDashboard?adminId=" + adminId;
+        return "redirect:/adminDashboard";
+    }
+
+    // SECURITY FIX: Properly clears the session
+    @GetMapping("/adminLogout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/adminLogin";
     }
 }

@@ -44,6 +44,7 @@
 <div class="login-box">
     <h2>Admin Portal</h2>
     <div th:if="${error}" class="error" th:text="${error}"></div>
+
     <form action="/adminLogin" method="post">
         <input type="text" name="username" placeholder="Admin Name" required>
         <input type="password" name="password" placeholder="Password" required>
