@@ -106,12 +106,12 @@
 
         /* Main Workspace Section */
         main {
-            flex: 1;
             display: grid;
-            grid-template-columns: 1.35fr 0.65fr; /* Left container takes up roughly 68% of width */
+            grid-template-columns: 65% 35%;
+            gap: 40px;
             align-items: center;
+            flex: 1;
             padding: 40px 60px;
-            gap: 60px;
             z-index: 5;
         }
 
@@ -122,17 +122,15 @@
         }
 
         .massive-heading {
-            font-family: var(--font-display);
-            font-size: clamp(6rem, 21vw, 24rem); /* Supersized responsive font size */
-            line-height: 0.85; /* Exactly 0.85. No lower. */
+            font-family: 'Impact', sans-serif;
+            font-stretch: ultra-condensed;
             text-transform: uppercase;
-            letter-spacing: -0.03em;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start; /* Flush Left alignment */
-            gap: 0;
-            margin-bottom: 20px;
-            padding-top: 8vh; /* Lower the Ceiling */
+            transform: scaleY(1.3);
+            transform-origin: left center;
+            font-size: clamp(6rem, 12vw, 15rem);
+            line-height: 0.78;
+            letter-spacing: -0.04em;
+            margin: 0;
         }
 
         .heading-row {
@@ -252,7 +250,7 @@
             line-height: 1.6;
             color: var(--text-secondary);
             margin-bottom: 35px;
-            max-width: 440px;
+            max-width: 400px;
             letter-spacing: -0.2px;
         }
 
