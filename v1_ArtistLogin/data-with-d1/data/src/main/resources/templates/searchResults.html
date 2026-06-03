@@ -135,7 +135,7 @@
     <h2>Songs</h2>
     <div class="results-grid">
         <div th:each="song : ${songs}" class="card">
-            <img th:src="@{'/image/' + ${song['CoverArtURL']}}" alt="Cover Art">
+            <img th:src="@{'/image/' + ${song['CoverArtURL']}}" alt="Cover Art" loading="lazy">
             <div class="info">
                 <h3 th:text="${song['Title']}">Song Title</h3>
                 <p>Artist: <span th:text="${song['ArtistName']}">Artist</span></p>

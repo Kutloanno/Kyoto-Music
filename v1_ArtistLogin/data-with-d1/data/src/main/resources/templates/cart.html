@@ -104,8 +104,8 @@
   <div th:unless="${isEmpty}">
 
     <div th:each="item : ${cartProducts}" class="cart-item">
-      <img th:if="${item['ImageURL'] != null and item['ImageURL'] != ''}" th:src="@{'/image/' + ${item['ImageURL']}}">
-      <img th:if="${item['ImageURL'] == null or item['ImageURL'] == ''}" src="https://via.placeholder.com/80/282828/1DB954?text=Merch">
+      <img th:if="${item['ImageURL'] != null and item['ImageURL'] != ''}" th:src="@{'/image/' + ${item['ImageURL']}}" loading="lazy">
+      <img th:if="${item['ImageURL'] == null or item['ImageURL'] == ''}" src="https://via.placeholder.com/80/282828/1DB954?text=Merch" loading="lazy">
 
       <div class="item-details">
         <h3 class="item-title" th:text="${item['Name']}">Item Name</h3>

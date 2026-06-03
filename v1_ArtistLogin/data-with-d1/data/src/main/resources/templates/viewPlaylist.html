@@ -124,9 +124,9 @@
             <div class="col-info">
                 <!-- Check if cover art exists, else show a placeholder -->
                 <img th:if="${song['CoverArtURL'] != null and song['CoverArtURL'] != ''}"
-                     th:src="@{'/image/' + ${song['CoverArtURL']}}" alt="Cover">
+                     th:src="@{'/image/' + ${song['CoverArtURL']}}" alt="Cover" loading="lazy">
                 <img th:if="${song['CoverArtURL'] == null or song['CoverArtURL'] == ''}"
-                     src="https://via.placeholder.com/50/282828/1DB954?text=🎶" alt="No Cover">
+                     src="https://via.placeholder.com/50/282828/1DB954?text=🎶" alt="No Cover" loading="lazy">
 
                 <div>
                     <div class="title" th:text="${song['Title']}">Song Title</div>

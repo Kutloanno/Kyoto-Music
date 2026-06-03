@@ -146,9 +146,9 @@
     <div class="card-grid">
         <div th:each="p : ${products}" class="item-card">
             <img th:if="${p['ImageURL'] != null and p['ImageURL'] != ''}"
-                 th:src="@{'/image/' + ${p['ImageURL']}}" alt="Product">
+                 th:src="@{'/image/' + ${p['ImageURL']}}" alt="Product" loading="lazy">
             <img th:if="${p['ImageURL'] == null or p['ImageURL'] == ''}"
-                 src="https://via.placeholder.com/300x300/1e293b/a78bfa?text=Product" alt="No Image">
+                 src="https://via.placeholder.com/300x300/1e293b/a78bfa?text=Product" alt="No Image" loading="lazy">
             <div class="info">
                 <span class="badge" th:classappend="${p['Category'] == 'Merch'} ? 'badge-merch' : 'badge-music'" th:text="${p['Category']}">Merch</span>
                 <h4 th:text="${p['Name']}">Product Name</h4>

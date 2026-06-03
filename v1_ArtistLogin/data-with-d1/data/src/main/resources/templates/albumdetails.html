@@ -85,7 +85,7 @@
 <a href="javascript:history.back()" class="back-link">← Back to Dashboard</a>
 
 <div class="header">
-    <img th:src="@{'/image/' + ${album['CoverArtURL']}}" alt="Album Art">
+    <img th:src="@{'/image/' + ${album['CoverArtURL']}}" alt="Album Art" loading="lazy">
     <div>
         <h4 style="color: #f472b6; margin: 0; text-transform: uppercase; font-size: 0.8rem;">Album</h4>
         <h1 th:text="${album['Title']}" style="font-size: 3rem; margin: 0;">Album Title</h1>
@@ -96,7 +96,7 @@
 <h3>Album Tracks</h3>
 <div class="song-grid">
     <div th:each="song : ${songs}" class="song-card">
-        <img th:src="@{'/image/' + ${song['CoverArtURL']}}" alt="Track Cover">
+        <img th:src="@{'/image/' + ${song['CoverArtURL']}}" alt="Track Cover" loading="lazy">
         <h4 th:text="${song['Title']}" style="margin: 10px 0 5px;">Song Title</h4>
         <p style="font-size: 0.8rem; color: #1DB954; margin: 0;">Track <span th:text="${song['TrackNumber']}">1</span></p>
 

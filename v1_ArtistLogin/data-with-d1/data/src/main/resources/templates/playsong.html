@@ -155,7 +155,7 @@
 <div class="player-container">
     <div class="cover-wrapper">
         <img th:src="@{'/image/' + ${song['CoverArtURL']}}" alt="Cover Art"
-             th:if="${song['CoverArtURL'] != null}">
+             th:if="${song['CoverArtURL'] != null}" loading="lazy">
         <div th:unless="${song['CoverArtURL'] != null}"
              style="background: #333; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 5rem;">
             🎵

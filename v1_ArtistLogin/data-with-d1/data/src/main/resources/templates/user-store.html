@@ -121,8 +121,8 @@
 
     <div class="product-grid">
         <div th:each="p : ${products}" class="product-card">
-            <img th:if="${p['ImageURL'] != null and p['ImageURL'] != ''}" th:src="@{'/image/' + ${p['ImageURL']}}">
-            <img th:if="${p['ImageURL'] == null or p['ImageURL'] == ''}" src="https://via.placeholder.com/400x300/282828/1DB954?text=Merch">
+            <img th:if="${p['ImageURL'] != null and p['ImageURL'] != ''}" th:src="@{'/image/' + ${p['ImageURL']}}" loading="lazy">
+            <img th:if="${p['ImageURL'] == null or p['ImageURL'] == ''}" src="https://via.placeholder.com/400x300/282828/1DB954?text=Merch" loading="lazy">
 
             <div class="product-info">
                 <div class="p-category" th:text="${p['Category']}">CATEGORY</div>

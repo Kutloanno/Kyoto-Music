@@ -166,7 +166,7 @@
     <h3>My Albums</h3>
     <div class="album-grid">
         <a th:each="album : ${albums}" th:href="@{'/album/' + ${album['AlbumID']}}" class="album-card">
-            <img th:src="@{'/image/' + ${album['CoverArtURL']}}" alt="Album Cover">
+            <img th:src="@{'/image/' + ${album['CoverArtURL']}}" alt="Album Cover" loading="lazy">
             <h4 th:text="${album['Title']}">Album Title</h4>
         </a>
     </div>

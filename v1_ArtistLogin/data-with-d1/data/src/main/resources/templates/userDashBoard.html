@@ -169,7 +169,7 @@
         <div class="song-grid">
             <div th:each="song : ${randomSongs}" class="song-card">
                 <img th:src="@{'/image/' + ${song['CoverArtURL']}}" alt="CoverArt"
-                     th:if="${song['CoverArtURL'] != null}">
+                     th:if="${song['CoverArtURL'] != null}" loading="lazy">
 
                 <h4 th:text="${song['Title']}">Song Title</h4>
                 <p th:text="${song['ArtistName']}">Artist Name</p>

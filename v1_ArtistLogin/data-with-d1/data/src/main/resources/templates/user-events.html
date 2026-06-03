@@ -109,9 +109,9 @@
     <div class="event-grid">
         <div th:each="ev : ${events}" class="event-card">
             <img th:if="${ev['ImageURL'] != null and ev['ImageURL'] != ''}"
-                 th:src="@{'/image/' + ${ev['ImageURL']}}" alt="Event Image">
+                 th:src="@{'/image/' + ${ev['ImageURL']}}" alt="Event Image" loading="lazy">
             <img th:if="${ev['ImageURL'] == null or ev['ImageURL'] == ''}"
-                 src="https://via.placeholder.com/600x300/181818/333?text=Live+Music" alt="Placeholder">
+                 src="https://via.placeholder.com/600x300/181818/333?text=Live+Music" alt="Placeholder" loading="lazy">
 
             <div class="event-info">
                 <div class="date-box">
