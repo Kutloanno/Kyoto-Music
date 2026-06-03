@@ -6,56 +6,290 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8744342952343838"
             crossorigin="anonymous"></script>
     <title>Kyoto Music - Sign Up</title>
+    <!-- Google Fonts: Space Grotesk and Anton -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    
     <style>
-        body { font-family: sans-serif; background: #121212; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .signup-container { background: #181818; padding: 40px; border-radius: 10px; width: 300px; border: 1px solid #282828; }
-        .form-group { margin-bottom: 15px; }
-        input { width: 100%; padding: 10px; margin-top: 5px; background: #333; border: 1px solid #444; color: white; border-radius: 4px; box-sizing: border-box; }
-        button { width: 100%; padding: 10px; background: #1DB954; border: none; color: white; font-weight: bold; cursor: pointer; border-radius: 20px; margin-top: 10px; }
-        .error { color: #ff4444; font-size: 0.8rem; margin-bottom: 10px; }
+        :root {
+            --bg-color: #070707;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --accent-green: #34d399; /* pastel-green */
+            --accent-pink: #f472b6;  /* pastel-pink */
+            --font-display: 'Impact', sans-serif;
+            --font-copy: 'Space Grotesk', sans-serif;
+        }
+
+        /* Base Reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-copy);
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            position: relative;
+            padding: 20px;
+        }
+
+        /* Subtle Grid Overlay */
+        .grid-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Bento Card Container */
+        .bento-card {
+            background-color: #0c0c0c;
+            border: 2px solid #333333;
+            padding: 50px 40px;
+            text-align: left;
+            position: relative;
+            z-index: 5;
+            max-width: 420px;
+            width: 100%;
+            border-radius: 0; /* Sleek, sharp-edged bento boxes */
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .bento-card:hover {
+            border-color: var(--accent-pink);
+            box-shadow: 0 10px 30px rgba(244, 114, 182, 0.15);
+        }
+
+        h1 {
+            font-family: var(--font-display);
+            font-stretch: ultra-condensed;
+            text-transform: uppercase;
+            font-size: clamp(2.2rem, 5vw, 3rem);
+            line-height: 0.9;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+            transform: scaleY(1.2);
+            transform-origin: left center;
+            color: var(--text-primary);
+        }
+
+        .neon-text {
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 35px;
+            font-weight: 700;
+        }
+
+        /* Form styling */
+        .form-group {
+            text-align: left;
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 14px;
+            background-color: rgba(12, 12, 12, 0.8);
+            border: 2px solid #333333;
+            color: white;
+            font-size: 1rem;
+            font-family: var(--font-copy);
+            transition: all 0.25s ease-out;
+            border-radius: 0;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--accent-pink);
+            box-shadow: 0 0 15px rgba(244, 114, 182, 0.2);
+            background-color: #121212;
+        }
+
+        select option {
+            background: #121212;
+            color: white;
+        }
+
+        /* Create Account Button */
+        button {
+            width: 100%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 28px;
+            font-family: var(--font-copy);
+            font-size: 1rem;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 50px;
+            cursor: pointer;
+            background-color: #000000;
+            border: 2px solid #333333;
+            color: var(--accent-pink);
+            transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            margin-top: 15px;
+        }
+
+        button:hover {
+            border-color: var(--accent-pink);
+            background-color: var(--accent-pink);
+            color: #000000;
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(244, 114, 182, 0.3);
+        }
+
+        /* Error element */
+        .error {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #f87171;
+            padding: 12px 16px;
+            border: 2px solid #ef4444;
+            border-radius: 0;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            text-align: center;
+            font-family: var(--font-copy);
+        }
+
+        .footer-links {
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-align: center;
+            border-top: 1px solid #222222;
+            padding-top: 20px;
+            line-height: 1.6;
+        }
+
+        .footer-links a {
+            color: var(--accent-pink);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Floating decoration elements */
+        .glowing-star {
+            position: absolute;
+            font-size: 1.5rem;
+            animation: pulse 2.5s infinite;
+            pointer-events: none;
+            z-index: 2;
+            transition: transform 0.1s ease-out;
+        }
+
+        .star-1 { top: 15%; left: 8%; color: var(--accent-pink); }
+        .star-2 { bottom: 25%; left: 45%; color: var(--accent-green); }
+        .star-3 { top: 75%; left: 85%; color: var(--accent-pink); }
+        .star-4 { top: 30%; left: 75%; color: var(--accent-green); }
+        .deco-x { position: absolute; color: var(--text-secondary); font-size: 1.2rem; top: 60%; left: 15%; opacity: 0.3; pointer-events: none; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scale(0.9); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
     </style>
 </head>
 <body>
 
-<div class="signup-container">
-    <h1>Join Kyoto</h1>
-    <p>Create your listener account</p>
+    <div class="grid-overlay"></div>
 
-    <div th:if="${error}" class="error" th:text="${error}"></div>
+    <!-- Background Neo-Brutalist decorations -->
+    <span class="glowing-star star-1">✦</span>
+    <span class="glowing-star star-2">✦</span>
+    <span class="glowing-star star-3">✦</span>
+    <span class="glowing-star star-4">✦</span>
+    <span class="deco-x">✕</span>
 
-    <form method="post" action="/registerUser">
-        <div class="form-group">
-            <label>Full Name</label>
-            <input type="text" name="name" placeholder="John Doe" required>
+    <div class="bento-card">
+        <h1>Join Kyoto</h1>
+        <p class="subtitle">Create your listener account</p>
+
+        <div th:if="${error}" class="error" th:text="${error}"></div>
+
+        <form method="post" action="/registerUser">
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" name="name" placeholder="John Doe" required>
+            </div>
+
+            <div class="form-group">
+                <label>Username (Login ID)</label>
+                <input type="text" name="username" placeholder="johndoe123" required>
+            </div>
+
+            <div class="form-group">
+                <label for="gender">Gender Identity</label>
+                <select id="gender" name="gender" required>
+                    <option value="" disabled selected>Select Gender</option>
+                    <option value="M">Male</option>
+                    <option value="F">Female</option>
+                    <option value="O">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" required>
+            </div>
+
+            <button type="submit">Create Account</button>
+        </form>
+
+        <div class="footer-links">
+            Already have an account? <a th:href="@{/userLogin}">Login</a><br>
+            <a href="/welcome">← Back to Gateway</a>
         </div>
+    </div>
 
-        <div class="form-group">
-            <label>Username (Login ID)</label>
-            <input type="text" name="username" placeholder="johndoe123" required>
-        </div>
-
-        <div class="form-group">
-            <label for="gender">Gender Identity</label>
-            <select id="gender" name="gender" required>
-                <option value="" disabled selected>Select Gender</option>
-                <option value="M">Male</option>
-                <option value="F">Female</option>
-                <option value="O">Other</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label>Password</label>
-            <input type="password" name="password" required>
-        </div>
-
-        <button type="submit">Create Account</button>
-    </form>
-
-    <p style="margin-top: 15px; font-size: 0.8rem; text-align: center;">
-        Already have an account? <a th:href="@{/userLogin}" style="color: #1DB954;">Login</a>
-    </p>
-</div>
+    <!-- Parallax mouse star wiggle script -->
+    <script>
+        document.addEventListener('mousemove', (e) => {
+            const stars = document.querySelectorAll('.glowing-star');
+            stars.forEach((star, index) => {
+                const depth = (index + 1) * 20;
+                const x = (window.innerWidth / 2 - e.clientX) / depth;
+                const y = (window.innerHeight / 2 - e.clientY) / depth;
+                star.style.transform = `translate(${x}px, ${y}px)`;
+            });
+        });
+    </script>
 
 </body>
 </html>

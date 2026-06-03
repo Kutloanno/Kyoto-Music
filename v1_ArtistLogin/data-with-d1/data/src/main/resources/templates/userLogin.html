@@ -6,45 +6,104 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8744342952343838"
             crossorigin="anonymous"></script>
     <title>Kyoto Music - Login</title>
+    <!-- Google Fonts: Space Grotesk and Anton -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    
     <style>
-        /* 1. RESET & BASE STYLES */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #121212;
-            color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        :root {
+            --bg-color: #070707;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --accent-green: #34d399; /* pastel-green */
+            --accent-pink: #f472b6;  /* pastel-pink */
+            --font-display: 'Impact', sans-serif;
+            --font-copy: 'Space Grotesk', sans-serif;
         }
 
-        /* 2. LOGIN CARD */
-        .login-container {
-            background-color: #181818;
-            padding: 50px 40px;
-            border-radius: 12px;
+        /* Base Reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-copy);
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            position: relative;
+            padding: 20px;
+        }
+
+        /* Subtle Grid Overlay */
+        .grid-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            max-width: 400px;
-            text-align: center;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-            border: 1px solid #282828;
+            height: 100%;
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Bento Card Container */
+        .bento-card {
+            background-color: #0c0c0c;
+            border: 2px solid #333333;
+            padding: 50px 40px;
+            text-align: left;
+            position: relative;
+            z-index: 5;
+            max-width: 420px;
+            width: 100%;
+            border-radius: 0; /* Sleek, sharp-edged bento boxes */
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .bento-card:hover {
+            border-color: var(--accent-pink);
+            box-shadow: 0 10px 30px rgba(244, 114, 182, 0.15);
         }
 
         h1 {
-            font-size: 2rem;
+            font-family: var(--font-display);
+            font-stretch: ultra-condensed;
+            text-transform: uppercase;
+            font-size: clamp(2.2rem, 5vw, 3rem);
+            line-height: 0.9;
+            letter-spacing: -0.02em;
             margin-bottom: 8px;
-            letter-spacing: -1px;
+            transform: scaleY(1.2);
+            transform-origin: left center;
+            color: var(--text-primary);
+        }
+
+        .neon-text {
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .subtitle {
-            color: #b3b3b3;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
             margin-bottom: 35px;
-            font-size: 0.95rem;
+            font-weight: 700;
         }
 
-        /* 3. FORM ELEMENTS */
+        /* Form styling */
         .form-group {
             text-align: left;
             margin-bottom: 20px;
@@ -52,138 +111,169 @@
 
         label {
             display: block;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             font-weight: 700;
             margin-bottom: 8px;
-            color: #efefef;
+            color: #cbd5e1;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         input {
             width: 100%;
             padding: 14px;
-            background-color: #2a2a2a;
-            border: 1px solid #3e3e3e;
-            border-radius: 4px;
+            background-color: rgba(12, 12, 12, 0.8);
+            border: 2px solid #333333;
             color: white;
             font-size: 1rem;
-            transition: border-color 0.3s, background-color 0.3s;
+            font-family: var(--font-copy);
+            transition: all 0.25s ease-out;
+            border-radius: 0;
         }
 
         input:focus {
             outline: none;
-            border-color: #1DB954;
-            background-color: #333;
+            border-color: var(--accent-pink);
+            box-shadow: 0 0 15px rgba(244, 114, 182, 0.2);
+            background-color: #121212;
         }
 
-        /* 4. BUTTON & LINKS */
+        /* Sign In Button */
         button {
             width: 100%;
-            padding: 14px;
-            background-color: #1DB954;
-            color: #000;
-            border: none;
-            border-radius: 500px; /* Capsule shape */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 28px;
+            font-family: var(--font-copy);
             font-size: 1rem;
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            text-decoration: none;
+            border-radius: 50px;
             cursor: pointer;
-            margin-top: 10px;
-            transition: transform 0.1s, background-color 0.2s;
+            background-color: #000000;
+            border: 2px solid #333333;
+            color: var(--accent-pink);
+            transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            margin-top: 15px;
         }
 
         button:hover {
-            background-color: #1ed760;
-            transform: scale(1.02);
+            border-color: var(--accent-pink);
+            background-color: var(--accent-pink);
+            color: #000000;
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(244, 114, 182, 0.3);
         }
 
-        button:active { transform: scale(0.98); }
+        /* Error element */
+        .error {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #f87171;
+            padding: 12px 16px;
+            border: 2px solid #ef4444;
+            border-radius: 0;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            text-align: center;
+            font-family: var(--font-copy);
+        }
 
         .footer-links {
-            margin-top: 25px;
-            border-top: 1px solid #282828;
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-align: center;
+            border-top: 1px solid #222222;
             padding-top: 20px;
-            font-size: 0.9rem;
-            color: #b3b3b3;
+            line-height: 1.6;
         }
 
         .footer-links a {
-            color: #fff;
+            color: var(--accent-pink);
             text-decoration: none;
             font-weight: 700;
         }
 
-        .footer-links a:hover { text-decoration: underline; color: #1DB954; }
-
-        /* 5. ERROR MESSAGE */
-        .error {
-            background-color: rgba(233, 30, 30, 0.1);
-            color: #ff5252;
-            padding: 12px;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            margin-bottom: 20px;
-            border: 1px solid #ff5252;
-        }
-        /* ========================================= */
-        /* 📱 MOBILE & ☀️ LIGHT MODE ULTIMATE CSS    */
-        /* ========================================= */
-
-        /* Mobile Squeeze Fixes */
-        @media (max-width: 768px) {
-            .container { padding: 20px 15px; }
-            nav { flex-direction: column; gap: 15px; padding: 15px; text-align: center; }
-            nav div { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; align-items: center; }
-            .form-row, .form-row-3, .card-grid, .product-grid, .event-grid { grid-template-columns: 1fr; gap: 15px; }
-            .cart-item, .event-card, .ticket-item { flex-direction: column; align-items: flex-start; }
-            .event-card img, .product-card img { width: 100%; height: auto; aspect-ratio: 16/9; }
-            .t-right { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-top: 15px; }
+        .footer-links a:hover {
+            text-decoration: underline;
         }
 
-        /* Light Mode Overrides */
-        body.light-mode { background-color: #f8fafc; color: #0f172a; }
-        body.light-mode nav { background-color: #ffffff; border-bottom: 1px solid #e2e8f0; color: #0f172a; }
-        body.light-mode nav a { color: #475569; }
-        body.light-mode nav a:hover { color: #1DB954; }
-        body.light-mode .product-card, body.light-mode .event-card, body.light-mode .cart-item, body.light-mode .cart-summary,
-        body.light-mode .form-panel, body.light-mode .item-card, body.light-mode .ticket-list { background-color: #ffffff; border-color: #cbd5e1; }
-        body.light-mode input, body.light-mode select, body.light-mode textarea { background-color: #f1f5f9; border-color: #cbd5e1; color: #0f172a; }
-        body.light-mode .p-desc, body.light-mode p, body.light-mode label { color: #64748b; }
-        body.light-mode .price, body.light-mode .p-price, body.light-mode .event-title, body.light-mode .item-title, body.light-mode .day { color: #0f172a; }
-        body.light-mode .date-box, body.light-mode .qty, body.light-mode .ticket-count, body.light-mode .event-date-box { background-color: #f1f5f9; border-color: #cbd5e1; }
-        body.light-mode .ticket-item { border-bottom-color: #cbd5e1; }
+        /* Floating decoration elements */
+        .glowing-star {
+            position: absolute;
+            font-size: 1.5rem;
+            animation: pulse 2.5s infinite;
+            pointer-events: none;
+            z-index: 2;
+            transition: transform 0.1s ease-out;
+        }
+
+        .star-1 { top: 15%; left: 8%; color: var(--accent-pink); }
+        .star-2 { bottom: 25%; left: 45%; color: var(--accent-green); }
+        .star-3 { top: 75%; left: 85%; color: var(--accent-pink); }
+        .star-4 { top: 30%; left: 75%; color: var(--accent-green); }
+        .deco-x { position: absolute; color: var(--text-secondary); font-size: 1.2rem; top: 60%; left: 15%; opacity: 0.3; pointer-events: none; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scale(0.9); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
     </style>
 </head>
 <body>
 
-<div class="login-container">
-    <h1>Kyoto Music</h1>
-    <p class="subtitle">Log in to start listening.</p>
+    <div class="grid-overlay"></div>
 
-    <div th:if="${error}" class="error" th:text="${error}"></div>
+    <!-- Background Neo-Brutalist decorations -->
+    <span class="glowing-star star-1">✦</span>
+    <span class="glowing-star star-2">✦</span>
+    <span class="glowing-star star-3">✦</span>
+    <span class="glowing-star star-4">✦</span>
+    <span class="deco-x">✕</span>
 
-    <div th:if="${param.success}" class="error" style="border-color: #1DB954; color: #1DB954; background: rgba(29,185,84,0.1);">
-        Account created! Please sign in.
-    </div>
+    <div class="bento-card">
+        <h1>Kyoto Music</h1>
+        <p class="subtitle">Log in to start listening.</p>
 
-    <form method="post" action="/userLogin">
-        <div class="form-group">
-            <label for="username">Username or Email</label>
-            <input type="text" id="username" name="username" placeholder="Username" required autofocus>
+        <div th:if="${error}" class="error" th:text="${error}"></div>
+
+        <div th:if="${param.success}" class="error" style="border-color: var(--accent-green); color: var(--accent-green); background: rgba(52, 211, 153, 0.1);">
+            Account created! Please sign in.
         </div>
 
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" placeholder="Password" required>
+        <form method="post" action="/userLogin">
+            <div class="form-group">
+                <label for="username">Username or Email</label>
+                <input type="text" id="username" name="username" placeholder="Username" required autofocus>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Password" required>
+            </div>
+
+            <button type="submit">Sign In</button>
+        </form>
+
+        <div class="footer-links">
+            Don't have an account? <a th:href="@{/userSignup}">Sign Up</a><br>
+            <a href="/welcome">← Back to Gateway</a>
         </div>
-
-        <button type="submit">Sign In</button>
-    </form>
-
-    <div class="footer-links">
-        Don't have an account? <a th:href="@{/userSignup}">Sign Up</a>
     </div>
-</div>
+
+    <!-- Parallax mouse star wiggle script -->
+    <script>
+        document.addEventListener('mousemove', (e) => {
+            const stars = document.querySelectorAll('.glowing-star');
+            stars.forEach((star, index) => {
+                const depth = (index + 1) * 20;
+                const x = (window.innerWidth / 2 - e.clientX) / depth;
+                const y = (window.innerHeight / 2 - e.clientY) / depth;
+                star.style.transform = `translate(${x}px, ${y}px)`;
+            });
+        });
+    </script>
 
 </body>
 </html>

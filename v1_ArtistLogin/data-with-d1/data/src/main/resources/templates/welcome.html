@@ -97,6 +97,21 @@
             text-shadow: 0 0 30px rgba(244, 114, 182, 0.15);
         }
 
+        .hover-word {
+            display: inline-block;
+            transition: transform 0.15s ease, color 0.15s ease, text-shadow 0.15s ease;
+            cursor: pointer;
+            padding: 0 4px;
+        }
+
+        .hover-word:hover {
+            transform: scale(1.08) rotate(-2deg) !important;
+            color: #ffffff !important;
+            text-shadow: 0 0 20px var(--accent-pink), 0 0 40px var(--accent-green) !important;
+            -webkit-text-fill-color: #ffffff !important;
+            z-index: 10;
+        }
+
         p.subtitle {
             font-size: 1.25rem;
             color: var(--text-secondary);
@@ -266,7 +281,12 @@
 
     <div class="container">
         <div class="header-section">
-            <h1>Welcome to <span class="neon-text">Kyoto Music</span></h1>
+            <h1>
+                <span class="hover-word">Welcome</span>
+                <span class="hover-word">to</span>
+                <span class="hover-word neon-text">Kyoto</span>
+                <span class="hover-word neon-text">Music</span>
+            </h1>
             <p class="subtitle">The rhythm of your world starts here.</p>
         </div>
 
