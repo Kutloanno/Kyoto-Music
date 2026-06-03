@@ -14,7 +14,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/", "/welcome", "/userLogin", "/artistlogin", "/artistsignup", "/userSignup", "/css/**", "/js/**", "/assests/**", "/image/**").permitAll()
+                .requestMatchers("/", "/welcome", "/welcome.html", "/userLogin", "/artistlogin", "/artistsignup", "/userSignup", "/css/**", "/js/**", "/assests/**", "/image/**").permitAll()
                 .anyRequest().permitAll() // Allow session-based interceptors to handle specific panel permissions
             )
             .csrf(csrf -> csrf.disable())
