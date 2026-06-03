@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kyoto Music | Welcome</title>
-    <!-- Google Fonts: Space Grotesk for description and Syne for headers -->
+    <!-- Google Fonts: Space Grotesk for description, Syne & Bebas Neue for headers -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Syne:wght@800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;700&family=Syne:wght@800&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -17,7 +17,7 @@
             --accent-green: #34d399; /* pastel-green */
             --accent-pink: #f472b6;  /* pastel-pink */
             --btn-pink: #fecdd3;     /* light pastel-pink */
-            --font-display: 'Syne', sans-serif;
+            --font-display: 'Bebas Neue', sans-serif;
             --font-copy: 'Space Grotesk', sans-serif;
         }
 
@@ -123,13 +123,14 @@
 
         .massive-heading {
             font-family: var(--font-display);
-            font-size: 5.5rem;
-            line-height: 0.9;
+            font-size: 15vw;
+            line-height: 0.85;
             text-transform: uppercase;
-            letter-spacing: -2px;
+            letter-spacing: -0.06em;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 0;
+            margin-bottom: 20px;
         }
 
         .heading-row {
@@ -181,29 +182,35 @@
         }
 
         /* Interactive Enlarge on Hover Effect */
-        .hover-letter {
+        /* Interactive Enlarge on Hover Effect */
+        .heading-row .hover-letter {
             display: inline-block;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
-                        color 0.3s ease, 
-                        text-shadow 0.3s ease;
+            transform: scaleY(1.35);
+            transform-origin: center bottom;
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                        color 0.2s ease, 
+                        text-shadow 0.2s ease;
             cursor: pointer;
             position: relative;
         }
 
-        .hover-letter:hover {
-            color: var(--text-primary);
-            text-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
-        }
-
-        /* The enlarged A & Y */
-        .hover-letter.scale-up {
-            transform: scale(1.4) rotate(-8deg);
+        /* The enlarged A & Y (simulated hover states by default) */
+        .heading-row .hover-letter.scale-up {
+            transform: scale(1.35, 1.85) rotate(-8deg) translateY(-5px);
             z-index: 10;
         }
         
-        .hover-letter.scale-up-alt {
-            transform: scale(1.45) rotate(8deg);
+        .heading-row .hover-letter.scale-up-alt {
+            transform: scale(1.4, 1.9) rotate(8deg) translateY(-5px);
             z-index: 10;
+        }
+
+        /* Universal hover state */
+        .heading-row .hover-letter:hover {
+            transform: scale(1.45, 1.95) rotate(-6deg) translateY(-10px) !important;
+            color: var(--text-primary) !important;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+            z-index: 20;
         }
 
         /* Styled Arrow Cursor between A & Y */
@@ -399,21 +406,21 @@
         <div class="heading-container">
             <h1 class="massive-heading">
                 <span class="heading-row color-green">
-                    C<span class="hover-letter">R</span>E<span class="hover-letter scale-up">A</span><span class="hover-letter">T</span>E
+                    <span class="hover-letter">C</span><span class="hover-letter">R</span><span class="hover-letter">E</span><span class="hover-letter scale-up">A</span><span class="hover-letter">T</span><span class="hover-letter">E</span>
                     <span class="wave-graphic"></span>
                 </span>
                 <span class="heading-row color-white">
-                    ON
+                    <span class="hover-letter">O</span><span class="hover-letter">N</span>
                     <span class="deco-badge">Web3 Ready</span>
                 </span>
                 <span class="heading-row color-pink">
-                    K<span class="hover-letter scale-up-alt">Y</span><span class="hover-letter">O</span>T<span class="hover-letter">O</span>
+                    <span class="hover-letter">K</span><span class="hover-letter scale-up-alt">Y</span><span class="hover-letter">O</span><span class="hover-letter">T</span><span class="hover-letter">O</span>
                     <svg viewBox="0 0 24 24" class="starburst-inline" fill="currentColor">
                         <path d="M12 2l1.9 3.9 4.3.6-3.1 3 1.9 4.2-3.8-2-3.8 2 1.9-4.2-3.1-3 4.3-.6L12 2z"/>
                     </svg>
                 </span>
                 <span class="heading-row color-white">
-                    MUSIC
+                    <span class="hover-letter">M</span><span class="hover-letter">U</span><span class="hover-letter">S</span><span class="hover-letter">I</span><span class="hover-letter">C</span>
                 </span>
             </h1>
             
@@ -429,8 +436,8 @@
                 KyotoMusic is the premier decentralized platform empowering artists to build their global sonic ecosystems. With direct fan-to-artist connection, seamless crypto integration for payments, and open-source smart contracts, we are the future of music distribution. Own your masters, define your sound.
             </div>
             
-            <!-- Tap In Button linking to Listener login/signup portal -->
-            <a href="/userLogin" class="tap-in-btn">
+            <!-- Tap In Button linking to Welcome landing page -->
+            <a href="/" class="tap-in-btn">
                 <span>Tap In</span>
                 <!-- Right Arrow SVG -->
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
