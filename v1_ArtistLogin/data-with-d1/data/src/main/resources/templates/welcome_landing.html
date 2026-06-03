@@ -108,7 +108,7 @@
         main {
             flex: 1;
             display: grid;
-            grid-template-columns: 1.2fr 0.8fr;
+            grid-template-columns: 1.35fr 0.65fr; /* Left container takes up roughly 68% of width */
             align-items: center;
             padding: 40px 60px;
             gap: 60px;
@@ -124,7 +124,7 @@
 
         .massive-heading {
             font-family: var(--font-display);
-            font-size: clamp(4rem, 12vw, 12rem); /* Responsive font size */
+            font-size: clamp(4rem, 14vw, 14rem); /* Responsive font size scaled up to fit container */
             line-height: 0.85; /* Exactly 0.85. No lower. */
             text-transform: uppercase;
             letter-spacing: -0.03em;
