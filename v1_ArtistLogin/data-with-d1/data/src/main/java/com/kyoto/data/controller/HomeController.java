@@ -8,8 +8,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class HomeController {
 
-    @GetMapping({"/", "/welcome", "/welcome.html"})
+    @GetMapping("/")
     public String home() {
+        return "welcome_landing";
+    }
+
+    @GetMapping({"/welcome", "/welcome.html"})
+    public String welcomePortal() {
         return "welcome";
     }
 
