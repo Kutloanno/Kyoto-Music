@@ -124,10 +124,10 @@
 
         .massive-heading {
             font-family: var(--font-display);
-            font-size: clamp(3.5rem, 11vw, 8.5rem); /* Clamp font size to prevent breaking screen layout */
-            line-height: 0.9; /* Slightly increased to avoid letter overlaps */
+            font-size: clamp(4rem, 12vw, 12rem); /* Responsive font size */
+            line-height: 0.85; /* Exactly 0.85. No lower. */
             text-transform: uppercase;
-            letter-spacing: -0.05em;
+            letter-spacing: -0.03em;
             display: flex;
             flex-direction: column;
             gap: 0;
@@ -185,33 +185,27 @@
         /* Interactive Enlarge on Hover Effect */
         .heading-row .hover-letter {
             display: inline-block;
-            transform: scaleY(1.25);
-            transform-origin: center bottom;
-            vertical-align: bottom; /* Prevents baseline shifting on hover/translateY */
-            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
-                        color 0.2s ease, 
-                        text-shadow 0.2s ease;
+            transition: transform 0.15s ease, color 0.15s ease;
             cursor: pointer;
             position: relative;
         }
 
         /* The enlarged A & Y (simulated hover states by default) */
         .heading-row .hover-letter.scale-up {
-            transform: scale(1.25, 1.7) rotate(-8deg) translateY(-5px);
-            z-index: 10;
+            transform: scale(1.15) rotate(-3deg);
+            z-index: 5;
         }
         
         .heading-row .hover-letter.scale-up-alt {
-            transform: scale(1.3, 1.75) rotate(8deg) translateY(-5px);
-            z-index: 10;
+            transform: scale(1.15) rotate(3deg);
+            z-index: 5;
         }
 
-        /* Universal hover state */
+        /* Universal hover state: ONLY use transform: scale(1.05) */
         .heading-row .hover-letter:hover {
-            transform: scale(1.35, 1.8) rotate(-6deg) translateY(-10px) !important;
+            transform: scale(1.05) !important;
             color: var(--text-primary) !important;
-            text-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
-            z-index: 20;
+            z-index: 10;
         }
 
         /* Styled Arrow Cursor between A & Y */
